@@ -20,3 +20,21 @@ function displayWorks(works){
     }
 }
 displayWorks(works)
+
+function filterBtn(){
+    const btns = document.querySelectorAll(".filter-btn");
+    for (let i = 0; i < btns.length; i++){
+        btns[i].addEventListener("click", function (){
+            const filtered = works.filter(function (work){
+                return work.category.id == btns[i].id;
+            });
+            document.querySelector(".gallery").innerHTML = "";
+            
+            if (filtered.length > 0)
+                displayWorks(filtered);
+            else
+                displayWorks(works);
+        });
+    };
+}
+filterBtn()
