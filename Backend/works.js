@@ -1,7 +1,9 @@
 const reponse = await fetch("http://localhost:5678/api/works");
 const works = await reponse.json();
 
+// Clears & Displays images in gallery div
 function displayWorks(works){
+    document.querySelector(".gallery").innerHTML = "";
     for (let i = 0; i < works.length; i++) {
         const article = works[i];
         const sectionPortfolio = document.querySelector("#portfolio");
@@ -12,7 +14,6 @@ function displayWorks(works){
         imageElement.alt = article.title;
         const nomElement = document.createElement("figcaption");
         nomElement.innerText = article.title;
-
         sectionPortfolio.appendChild(divGallery);
         divGallery.appendChild(workElement)
         workElement.appendChild(imageElement);
@@ -21,20 +22,24 @@ function displayWorks(works){
 }
 displayWorks(works)
 
-function filterBtn(){
-    const btns = document.querySelectorAll(".filter-btn");
-    for (let i = 0; i < btns.length; i++){
-        btns[i].addEventListener("click", function (){
-            const filtered = works.filter(function (work){
-                return work.category.id == btns[i].id;
-            });
-            document.querySelector(".gallery").innerHTML = "";
-            
-            if (filtered.length > 0)
-                displayWorks(filtered);
+
+// FILTER BUTTONS
+// Calls displayWorks() with: Filtered list of works that have an id = id of clicked button 
+//                            or
+//                            All works if button has no id
+function filterWorks(){
+    [...document.querySelectorAll(".filter-btn")].forEach((button) => {
+        button.addEventListener("click", function (){
+            const activeBtnId = button.id;
+            if (activeBtnId){
+                displayWorks(works.filter((work) => {
+                    return work.categoryId == activeBtnId;
+                }));
+            } 
             else
-                displayWorks(works);
+                return displayWorks(works);
         });
-    };
-}
-filterBtn()
+    }); 
+};
+filterWorks()
+
