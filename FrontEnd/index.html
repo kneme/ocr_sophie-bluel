@@ -4,21 +4,24 @@
 		<meta charset="UTF-8">
 		<title>Sophie Bluel - Architecte d'intérieur</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" type="image/x-icon" href="./assets/icons/favicon.ico">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans:wght@100..900&display=swap" rel="stylesheet">
 		<meta name="description" content="">
-		<link rel="stylesheet" href="./assets/style.css">
+		<script src="https://kit.fontawesome.com/0197c63030.js" crossorigin="anonymous"></script>
 		<script type="module" src="../Backend/works.js"></script>
+		<script type="module" src="../Backend/admin.js"></script>
+		<link rel="stylesheet" href="./assets/style.css">
 	</head>
 	<body>
 		<header>
 			<a href="./index.html"><h1>Sophie Bluel <small>Architecte d'intérieur</small></h1></a>
 			<nav>
 				<ul>
-					<li><a href="#">projets</a></li>
-					<li><a href="#">contact</a></li>
-					<li><a href="./login.html">login</a></li>
+					<li>projets</li>
+					<li>contact</li>
+					<li><a id="loginBtn" href="./login.html">login</a></li>
 					<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 				</ul>
 			</nav>
@@ -36,13 +39,11 @@
 				</article>
 			</div>
 			<section id="portfolio">
-				<h2>Mes Projets</h2>
-				<div class="filtres">
-					<button class="filter-btn">Tous</button>
-					<button class="filter-btn" id="1">Objets</button>
-					<button class="filter-btn" id="2">Appartements</button>
-					<button class="filter-btn" id="3">Hotels & Restaurants</button>
+				<div class="portfolioTitle">
+					<h2>Mes Projets</h2>
 				</div>
+				<form class="filtres" action="#" method="post">
+				</form>
 				<div class="gallery">
 				</div>
 			</section>

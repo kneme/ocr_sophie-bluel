@@ -48,6 +48,29 @@ table {
 	border-spacing: 0;
 }
 /** end reset css**/
+form.filtres label{
+	display: none;
+}
+
+.htmlLogin{
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+}
+.bodyLogin{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.headerLogin{
+	margin-bottom: 0;
+}
+.mainLogin{
+	padding: 100px 0;
+}
+
 body {
 	max-width: 1140px;
 	margin:auto;
@@ -104,21 +127,17 @@ nav img{
 	width: 20px;
 }
 
-li:hover {
-	color: #B1663C;
-}
-
 nav a{
 	color: inherit;
 	text-decoration-line: none;
 }
-
-nav a.activePage{
-	font-weight: 550;
+a:hover{
+	color: #B1663C;
+	cursor: pointer;
 }
 
-main[class="login"]{
-	margin: 150px 0 350px 0;
+.activePage{
+	font-weight: 550;
 }
 
 #introduction {
@@ -144,33 +163,45 @@ main[class="login"]{
 #introduction p {
 	margin-bottom: 0.5em;
 }
-#portfolio h2 {
-	text-align: center;
-	margin-bottom: 1em;
-}
 
-#portfolio div.filtres{
+#portfolio {
+	margin-top: 150px;
+}
+#portfolio .portfolioTitle{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#portfolio .portfolioTitle button{
+	cursor: pointer;
+	border: none;
+	background-color: transparent;
+	margin-left: 2em;
+}
+#portfolio .portfolioTitle button:hover{
+	color: #B1663C;
+}
+#portfolio .filtres{
 	display: flex;
 	margin: 50px 0 40px 0;
 	gap: 10px;
 	justify-content: center;
 }
-
-#portfolio div.filtres button{
+#portfolio .filtres input{
+	cursor: pointer;
 	min-width: 100px;
-    padding: 8px;
+    padding: 10px;
     border-radius: 60px;
     border: 1px solid #1D6154;
-    background-color: white;
-	font-family: 'Syne';
 	color: #1D6154;
+    background-color: transparent;
+	font-family: 'Syne';
     font-size: 15px;
 }
-
-#portfolio div.filtres button:hover,
-#portfolio div.filtres button:focus{
+#portfolio .filtres input:hover,
+#portfolio .filtres input:focus{
 	background-color: #1D6154;
-	color: white;
+	color: #fffef9;
 }
 
 .gallery {
@@ -183,8 +214,23 @@ main[class="login"]{
 
 .gallery img {
 	width: 100%;
-
 }
+
+.login-success{
+	background-color: #62b35c;
+}
+.login-failure{
+	background-color: #e17676;
+}
+
+#login-message{
+	color: #fffef9;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 30px;
+}
+
 #contact {
 	width: 50%;
 margin: auto;
@@ -197,12 +243,17 @@ margin: auto;
 #login h2{
 	margin-bottom: 20px;
 }
+
 #contact form,
 #login form{
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
+}
+
+#login form{
+	margin-top: 0;
 }
 
 #contact input,
@@ -225,16 +276,23 @@ margin: auto;
 	margin: auto;
 }
 
+#contact input[type="text"],
+#contact input[type="email"],
+#contact #message,
 #login input[type="email"],
 #login input[type="password"]{
 	padding-left: 10px;
 }
 
-#forgot_password{
+#contact #message{
+	padding-top: 10px;
+}
+
+#forgot-password{
 	text-decoration-line: underline;
 	color: inherit;
 }
-#forgot_password:hover{
+#forgot-password:hover{
 	color: #B1663C
 }
 
