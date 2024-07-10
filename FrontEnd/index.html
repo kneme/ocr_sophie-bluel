@@ -10,8 +10,8 @@
 		<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans:wght@100..900&display=swap" rel="stylesheet">
 		<meta name="description" content="">
 		<script src="https://kit.fontawesome.com/0197c63030.js" crossorigin="anonymous"></script>
-		<script type="module" src="../Backend/works.js"></script>
-		<script type="module" src="../Backend/admin.js"></script>
+		<script type="module" src="./works.js"></script>
+		<script type="module" src="./admin.js"></script>
 		<link rel="stylesheet" href="./assets/style.css">
 	</head>
 	<body>
@@ -40,12 +40,16 @@
 			</div>
 			<section id="portfolio">
 				<div class="portfolioTitle">
-					<h2>Mes Projets</h2>
+					<h2 id="portfolioTitle">Mes Projets</h2>
 				</div>
 				<form class="filtres" action="#" method="post">
 				</form>
 				<div class="gallery">
 				</div>
+				<aside id="modal" class="modal" aria-hidden="true">
+					<div class="modalContent">
+					</div>
+				</aside>
 			</section>
 			<section id="contact">
 				<h2>Contact</h2>

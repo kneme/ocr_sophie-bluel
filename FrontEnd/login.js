@@ -13,11 +13,10 @@ function adminLogin() {
             headers: {"Content-Type": "application/json"},
             body: stringUserInput
         }).then(resp => resp.json().then(data => ({status: resp.status, body: data})))
-        .then((obj) => loginOrError((obj.status === 200), (obj.body.token)));
+        .then((obj) => loginOrError((obj.status === 200), obj.body.token));
     });
 };
 adminLogin()
-
 function loginOrError(loginSuccess, token){
     // Only display one login message
     const displayedMsg = document.getElementById("login-message");
@@ -33,7 +32,7 @@ function loginOrError(loginSuccess, token){
         // Save login token
         sessionStorage.setItem("token", token);
         // Redirect
-        window.location.href = "../Frontend/index.html";
+        window.location.href = "./index.html";
     } else {
         messageSpan.innerText = "Erreur dans l'identifiant ou le mot de passe";
         messageSpan.className = "login-failure";

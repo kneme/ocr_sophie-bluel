@@ -52,22 +52,22 @@ form.filtres label{
 	display: none;
 }
 
-.htmlLogin{
+.loginHtml{
 	height: 100vh;
 	display: flex;
 	justify-content: center;
 }
-.bodyLogin{
+.loginBody{
 	width: 100%;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 }
-.headerLogin{
+.loginHeader{
 	margin-bottom: 0;
 }
-.mainLogin{
+.loginMain{
 	padding: 100px 0;
 }
 
@@ -103,7 +103,6 @@ h1 > small {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
 }
 
 h2{
@@ -116,22 +115,20 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
 }
 nav li {
 	padding: 0 25px;
 	font-size: 1.2em;
 }
-
 nav img{
 	width: 20px;
 }
-
 nav a{
 	color: inherit;
 	text-decoration-line: none;
 }
-a:hover{
+
+li:hover, a:hover, button:hover{
 	color: #B1663C;
 	cursor: pointer;
 }
@@ -167,19 +164,16 @@ a:hover{
 #portfolio {
 	margin-top: 150px;
 }
-#portfolio .portfolioTitle{
+.portfolioTitle{
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
-#portfolio .portfolioTitle button{
+#modalBtn {
 	cursor: pointer;
 	border: none;
 	background-color: transparent;
 	margin-left: 2em;
-}
-#portfolio .portfolioTitle button:hover{
-	color: #B1663C;
 }
 #portfolio .filtres{
 	display: flex;
@@ -187,7 +181,8 @@ a:hover{
 	gap: 10px;
 	justify-content: center;
 }
-#portfolio .filtres input{
+.filtres input,
+#validate {
 	cursor: pointer;
 	min-width: 100px;
     padding: 10px;
@@ -198,8 +193,8 @@ a:hover{
 	font-family: 'Syne';
     font-size: 15px;
 }
-#portfolio .filtres input:hover,
-#portfolio .filtres input:focus{
+.filtres input:hover,
+.filtres input:focus{
 	background-color: #1D6154;
 	color: #fffef9;
 }
@@ -211,19 +206,17 @@ a:hover{
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
 }
-
 .gallery img {
 	width: 100%;
 }
 
-.login-success{
+.login-success {
 	background-color: #62b35c;
 }
-.login-failure{
+.login-failure {
 	background-color: #e17676;
 }
-
-#login-message{
+#login-message {
 	color: #fffef9;
 	display: flex;
 	justify-content: center;
@@ -243,7 +236,6 @@ margin: auto;
 #login h2{
 	margin-bottom: 20px;
 }
-
 #contact form,
 #login form{
 	text-align: left;
@@ -251,11 +243,9 @@ margin: auto;
 	display: flex;
 	flex-direction: column;
 }
-
 #login form{
 	margin-top: 0;
 }
-
 #contact input,
 #login input{
 	height: 50px;
@@ -275,19 +265,18 @@ margin: auto;
 	width: 35%;
 	margin: auto;
 }
-
 #contact input[type="text"],
 #contact input[type="email"],
 #contact #message,
 #login input[type="email"],
-#login input[type="password"]{
+#login input[type="password"],
+#titre,
+#categories {
 	padding-left: 10px;
 }
-
 #contact #message{
 	padding-top: 10px;
 }
-
 #forgot-password{
 	text-decoration-line: underline;
 	color: inherit;
@@ -296,20 +285,201 @@ margin: auto;
 	color: #B1663C
 }
 
-input[type="submit"]{
+input[type="submit"] {
 	font-family: 'Syne';
 	font-weight: 700;
-	color: white;
+	color: #fffef9;
 	background-color: #1D6154;
 	margin : 2em auto ;
 	width: 180px;
 	text-align: center;
-	border-radius: 60px ;
+	border-radius: 60px;
 }
 
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
+}
+
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0,0,0);
+	background-color: rgba(0,0,0,0.4);
+}
+.modalContent {
+	background-color: #fffef9;
+	border-radius: 10px;
+	margin: 15% auto;
+	padding: 20px;
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+}
+.modalContent > * {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+.goBack {
+	border: none;
+	cursor: pointer;
+	align-self: flex-start;
+	background-color: transparent;
+	font-size: 1.5em;
+	height: 0;
+}
+#modalTitle {
+	font-family: inherit;
+	font-weight: 350;
+	font-size: 2em;
+	color: inherit;
+}
+.closeModal {
+	background-color: transparent;
+	align-self: flex-end;
+	font-weight: 300;
+	font-size: 25px;
+	color: inherit;
+	border: none;
+	padding: 0;
+}
+.galleryModal {
+	margin: 40px 0;
+	padding-bottom: 60px;
+	border-bottom: 2px solid #b3b3b3;
+	max-width: 100vh;
+	width: 70%;
+	gap: 25px;
+	display: flex;
+	flex-direction: column;
+}
+.workRow {
+	gap: 2.5%;
+	display: grid;
+	grid-template-columns: 18% 18% 18% 18% 18%;
+	width: 100%;
+}
+.workRow figure {
+	position: relative;
+	width: 100%;
+}
+.workRow img {
+	width: 100%;
+}
+.overlay {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+
+}
+.overlay i {
+	cursor: pointer;
+	color: #fffef9;
+	background-color: black;
+	padding: 3px;
+}
+.galleryModal figcaption {
+	display: none;
+}
+#addPicture {
+	width: 50%;
+    padding: 10px;
+	cursor: pointer;
+	margin-bottom: 30px;
+    border-radius: 60px;
+    border: 1px solid #1D6154;
+	background-color: #1D6154;
+	font-family: 'Syne';
+    color: #fffef9;
+    font-size: 15px;
+}
+/* Add pics modal */ 
+#userInputs {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 35px 0 10px;
+	max-width: 100vh;
+	width: 70%;
+}
+fieldset {
+	width: 100%;
+	display: flex;
+	margin-bottom: 40px;
+	padding-bottom: 50px;
+	flex-direction: column;
+	border-bottom: 2px solid #b3b3b3;
+}
+fieldset label {
+	margin-bottom: 1em;
+	margin-top: 1.5em;
+	font-weight: 500;
+	color: #6E6E6E;
+}
+.selectPic {
+	display: flex;
+	flex-direction: column;
+	background-color: #E8F1F6;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 5px;
+	max-width: 100vh;
+	height: 200px;
+	gap: 10px;
+}
+.selectPic i{
+	color: #B8C5CD;
+	font-size: 5em;
+}
+.customInput {
+	margin: 0;
+	width: 30%;
+	border: none;
+	padding: 15px;
+	cursor: pointer;
+	border-radius: 60px;
+	background-color: #CBD6DC;
+	text-align: center;
+	font-weight: 500;
+	color: #2F6685;
+}
+#addWork {
+	display: none;
+}
+.selectPic p {
+	font-size: 0.7em;
+	font-weight: 500;
+	color: #6D6E68;
+}
+.newImg {
+	height: 100%;
+}
+#titre,
+#categories {
+	border: none;
+	height: 50px;
+	background-color: #fffef9;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+#validate {
+	width: 70%;
+	margin: 0 0 20px;
+	background-color: #1D6154;
+	color: #fffef9;
+}
+#userInputs:invalid #validate{
+	pointer-events: none;
+	cursor: not-allowed;
+	border: 1px solid #A7A7A7;
+	background-color: #A7A7A7;
 }
 
