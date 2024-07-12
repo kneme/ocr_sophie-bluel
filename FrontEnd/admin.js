@@ -11,7 +11,17 @@ if (sessionStorage.getItem("token")){
         sessionStorage.removeItem("token"); 
         window.location.href = "./index.html";
     });
-    // Display modal edit button
+    // Header edit button & Adapt margin
+    const editSpan = document.createElement("span");
+    editSpan.className = "editSpan";
+    editSpan.innerHTML = `<button id="modalBtn" class="headerModalBtn">
+                            <i class="fa-regular fa-pen-to-square"></i> Mode édition
+                        </button>`;
+    const header = document.querySelector("header");
+    header.style.marginTop = "100px";
+    const parent = document.getElementById("logoLink");
+    header.insertBefore(editSpan, parent);
+    // Second edit button
     const editBtn = document.createElement("button");
     editBtn.id = "modalBtn";
     editBtn.innerHTML = `<i class="fa-regular fa-pen-to-square"></i> modifier`;

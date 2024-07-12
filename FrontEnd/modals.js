@@ -9,25 +9,28 @@ export async function openCloseModal(){
     modal.setAttribute("aria-labelledby", "modalTitle");
     modal.role = "dialog";
     // Open
-    const editBtn = document.getElementById("modalBtn");
-    editBtn.onclick = function () {
-        generateGalleryModal();
-        modal.style.display = "block";
-        editBtn.ariaModal = "true";
-    };
+    const editBtns = document.querySelectorAll("#modalBtn");
+    [...editBtns].forEach(button => {
+        button.onclick = function () {
+            generateGalleryModal();
+            modal.style.display = "block";
+            button.ariaModal = "true";
+        };
+    });
     // Update gallery
     displayWorks(createWorksElements(works));
     // Close modal
     const closeBtn = document.querySelector(".closeModal");
     if (closeBtn) {
+        const editBtn = document.querySelector("#modalBtn[aria-modal='true']");
         closeBtn.onclick = function () {
             modal.style.display = "none";
             editBtn.ariaModal = "false";
         };
         window.onclick = function(event) {
             if (event.target == modal) {
-            modal.style.display = "none";
-            editBtn.ariaModal = "false";
+                modal.style.display = "none";
+                editBtn.ariaModal = "false";
             };
         };
         window.addEventListener('keydown', function (event) {
