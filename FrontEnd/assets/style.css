@@ -390,10 +390,11 @@ footer nav ul {
 	width: 100%;
 }
 .overlay {
+	border: none;
+	background-color: transparent;
 	position: absolute;
-	top: 6px;
 	right: 6px;
-
+	top: 6px;
 }
 .overlay i {
 	cursor: pointer;
@@ -473,6 +474,11 @@ fieldset label {
 	font-size: 0.7em;
 	font-weight: 500;
 	color: #6D6E68;
+}
+#imageTooBig,
+#imageTooBig > * {
+	font-size: 1em;
+	color: #e17676;
 }
 .newImg {
 	height: 100%;

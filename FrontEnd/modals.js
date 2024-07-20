@@ -1,14 +1,14 @@
-import { getWorks, createWorksElements, displayWorks } from "./works.js";
+import { fetchGetWorks, createWorksElements, displayWorks } from "./works.js";
 
 // Show modal & arial-modal = true
 // Hide modal & arial-modal = false
 // Updates homepage gallery when called
 export async function openCloseModal(){
-    const works = await getWorks();
+    const works = await fetchGetWorks();
     const modal = document.getElementById("modal");
     modal.setAttribute("aria-labelledby", "modalTitle");
     modal.role = "dialog";
-    // Open
+    // Open modal
     const editBtns = document.querySelectorAll("#modalBtn");
     [...editBtns].forEach(button => {
         button.onclick = function () {
@@ -45,33 +45,6 @@ export async function openCloseModal(){
 
 
 // -------- FIRST VIEW OF MODAL: Gallery & Option to delete works --------
-// Generate gallery modal's content
-async function generateGalleryModal(){
-    const works = await getWorks();
-    const workElements = createWorksElements(works);
-    const parent = document.querySelector(".modalContent");
-    parent.innerHTML = `
-    <div class="modalHeader">
-        <button class="closeModal">&times;</button>
-        <h2 id=modalTitle>Galerie photo</h2>
-    </div>
-    <div class="modalBody">
-        <div class="galleryModal">
-        </div>
-    </div>
-    <div class="modalFooter">
-        <input id="addPicture" type="button" value="Ajouter une photo">
-    </div>
-    `;
-    // Generate gallery
-    createRows(workElements);
-    // Delete images (trash can icons & onclick action)
-    deleteImg(workElements);
-    // Close modal
-    openCloseModal();
-    // Generate add picture modal (add picture button)
-    document.getElementById("addPicture").onclick = generateAddPicsModal;
-};
 // Display images in modal
 function createRows(listOfElements) {
     const galleryModal = document.querySelector(".galleryModal");
@@ -99,28 +72,93 @@ function deleteImg(listOfFigures) {
     // Display trash cans
     listOfFigures.forEach(figure => {
         const image = figure.querySelector("img");
-        const overlayDiv = document.createElement("div");
-        overlayDiv.className = "overlay";
+        const overlayBtn = document.createElement("button");
+        overlayBtn.className = "overlay";
+        overlayBtn.id = image.id;
         const trashIcon = document.createElement("i");
         trashIcon.className = "fa-solid fa-trash-can";
-        trashIcon.id = image.id;
-        overlayDiv.appendChild(trashIcon);
-        figure.appendChild(overlayDiv);
+        overlayBtn.appendChild(trashIcon);
+        figure.appendChild(overlayBtn);
     });
-    // Delete image & Update modal gallery
-    [...document.querySelectorAll(".overlay i")].forEach(trash => {
-        trash.addEventListener("click", function (event){
+    // Delete image & Update gallery modal
+    [...document.querySelectorAll(".overlay")].forEach(button => {
+        button.onclick = function () {
             const bearer = `Bearer ${sessionStorage.getItem("token")}`;
-            fetch(`http://localhost:5678/api/works/${event.target.id}`, {
-                method: "DELETE",
-                headers: {"Authorization": bearer}
-            }).then(generateGalleryModal);
-        });
+            fetchDeleteWorks(bearer, button.id);
+        };
     });
+};
+async function fetchDeleteWorks(bearer, id) {
+    await fetch(`http://localhost:5678/api/works/${id}`, {
+        method: "DELETE",
+        headers: {"Authorization": bearer}
+    }).catch(() => {console.error("Could not fetch resource (DELETE /works/{id}).");});
+    // Refresh galleries
+    return generateGalleryModal();
+};
+// Generate gallery modal's content
+async function generateGalleryModal(){
+    const works = await fetchGetWorks();
+    const workElements = createWorksElements(works);
+    const parent = document.querySelector(".modalContent");
+    parent.innerHTML = `
+    <div class="modalHeader">
+        <button class="closeModal">&times;</button>
+        <h2 id=modalTitle>Galerie photo</h2>
+    </div>
+    <div class="modalBody">
+        <div class="galleryModal">
+        </div>
+    </div>
+    <div class="modalFooter">
+        <input id="addPicture" type="button" value="Ajouter une photo">
+    </div>
+    `;
+    // Generate gallery
+    createRows(workElements);
+    // Delete images
+    deleteImg(workElements);
+    // Close modal
+    openCloseModal();
+    // Generate add picture modal (add picture button)
+    document.getElementById("addPicture").onclick = generateAddPicsModal;
 };
 
 
 // -------- SECOND VIEW OF (SAME) MODAL: Add work to gallery --------
+// List categories from the API in add picture form
+async function listCategories() {
+    const getCategories = await fetch("http://localhost:5678/api/categories")
+    .catch(() => {console.error("Could not fetch resource (GET /categories).");});
+    const categories = await getCategories.json();
+    categories.forEach(category => createOption(category.name, category.id));
+};
+// Create DOM ready 'option' element
+function createOption(name, id) {
+    const optionList = document.createElement("option");
+    optionList.value = id;
+    optionList.innerText = name;
+    document.getElementById("categories").appendChild(optionList);
+}
+// Generate pertinent image error message in form
+function imageError(msg) {
+    if (!document.getElementById("imageTooBig")) {
+        const selectPic = document.querySelector(".selectPic");
+        const errorSpan = document.createElement("span");
+        errorSpan.id = "imageTooBig";
+        errorSpan.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${msg}`;
+        selectPic.appendChild(errorSpan);
+    };
+};
+async function fetchPostWorks(bearer, formData) {
+    await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {"Authorization": bearer},
+        body: formData
+    }).catch(() => {console.error("Could not fetch resource (POST /works).");});
+    // Refresh galleries
+    return generateGalleryModal();
+};
 // Using the previous modal, replacing some elements with new ones
 function generateAddPicsModal() {
     const parent = document.querySelector(".modalContent");
@@ -158,47 +196,37 @@ function generateAddPicsModal() {
     const imgInput = document.getElementById("addWork");         
     imgInput.onchange = function (){
         const [image] = imgInput.files;
-        if (image) {
-            const selectPic = document.querySelector(".selectPic");
-            selectPic.innerHTML = "";
-            const newImg = document.createElement("img");
-            newImg.title = image.name;
-            newImg.src = URL.createObjectURL(image);
-            newImg.className = "newImg";
-            selectPic.appendChild(newImg);
-            // Upload image & Redirect to updated gallery modal
-            const validate = document.getElementById("validate");
-            validate.addEventListener("click", function (event){
-                event.preventDefault();
-                const formData = new FormData();
-                formData.append("image", image);
-                formData.append("title", document.getElementById("titre").value);
-                formData.append("category", document.getElementById("categories").value);
-                const bearer = `Bearer ${sessionStorage.getItem("token")}`;
-                fetch("http://localhost:5678/api/works", {
-                    method: "POST",
-                    headers: {"Authorization": bearer},
-                    body: formData
-                }).then(generateGalleryModal);
-            });
+        switch (true) {
+            case (image.size > 4000000):
+                document.getElementById("addWork").value = ""; // Block validate button
+                return imageError("L'image dépasse 4mo");
+            case (image.type !== "image/jpeg" && image.type !== "image/png"):
+                document.getElementById("addWork").value = ""; // Block validate button
+                return imageError("L'image doit être au format jpg ou png");
+            default:
+                const selectPic = document.querySelector(".selectPic");
+                selectPic.innerHTML = "";
+                const newImg = document.createElement("img");
+                newImg.title = image.name;
+                newImg.src = URL.createObjectURL(image);
+                newImg.className = "newImg";
+                selectPic.appendChild(newImg);
+                // Upload image & Redirect to updated gallery modal
+                const validate = document.getElementById("validate");
+                validate.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const formData = new FormData();
+                    formData.append("image", image);
+                    formData.append("title", document.getElementById("titre").value);
+                    formData.append("category", document.getElementById("categories").value);
+                    const bearer = `Bearer ${sessionStorage.getItem("token")}`;
+                    fetchPostWorks(bearer, formData);
+                });
         };
     };
     // Close modal
     openCloseModal();
     // Generate gallery modal (left arrow)
     document.querySelector(".goBack").onclick = generateGalleryModal;
-};
-// List categories from the API in add picture form
-async function listCategories() {
-    const getCategories = await fetch("http://localhost:5678/api/categories");
-    const categories = await getCategories.json();
-    categories.forEach(category => createOption(category.name, category.id));
-};
-// Create DOM ready 'option' element
-function createOption(name, id) {
-    const optionList = document.createElement("option");
-    optionList.value = id;
-    optionList.innerText = name;
-    document.getElementById("categories").appendChild(optionList);
 }
 

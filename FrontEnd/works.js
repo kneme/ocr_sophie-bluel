@@ -13,68 +13,63 @@ const alternateTexts = {1:"Abajour suspension bleu turquoise",
 
 
 // Return list of works from API
-export async function getWorks() {
-    const getWorks = await fetch("http://localhost:5678/api/works");
+export async function fetchGetWorks() {
+    const getWorks = await fetch("http://localhost:5678/api/works")
+    .catch(() => {console.error("Could not fetch resource (GET /works).");});
     const works = await getWorks.json();
-    return works
+    return works;
 };
 // Return list of works ready for DOM manipulations
 export function createWorksElements(works) {
-    const listOfWorks = [];
-    for (let i = 0; i < works.length; i++) {
-        const work = works[i];
-        const workElement = document.createElement("figure");
-        const imageElement = document.createElement("img");
-        imageElement.id = work.id;
-        imageElement.src = work.imageUrl;
-        const alternate = alternateTexts[work.id];
-        imageElement.alt = alternate ? alternateTexts[work.id] :
-                                       "pas de description pour le moment";
-        const nomElement = document.createElement("figcaption");
-        nomElement.innerText = work.title;
-        workElement.appendChild(imageElement);
-        workElement.appendChild(nomElement);
-        listOfWorks.push(workElement);
+    if (works) {
+        const listOfWorks = [];
+        for (let i = 0; i < works.length; i++) {
+            const work = works[i];
+            const workElement = document.createElement("figure");
+            const imageElement = document.createElement("img");
+            imageElement.id = work.id;
+            imageElement.src = work.imageUrl;
+            imageElement.alt = alternateTexts[work.id] ?? "pas de description pour le moment";
+            const nomElement = document.createElement("figcaption");
+            nomElement.innerText = work.title;
+            workElement.appendChild(imageElement);
+            workElement.appendChild(nomElement);
+            listOfWorks.push(workElement);
+        };
+        return listOfWorks;
     };
-    return listOfWorks;
 };
 // Display works (images) in homepage gallery
 export function displayWorks(works){
-    const divGallery = document.querySelector(".gallery");
-    divGallery.innerHTML = "";
-    for (let i = 0; i < works.length; i++) {
-        divGallery.appendChild(works[i]);
+    if (works) {
+        const divGallery = document.querySelector(".gallery");
+        divGallery.innerHTML = "";
+        for (let i = 0; i < works.length; i++) {
+            divGallery.appendChild(works[i]);
+        };
     };
 };
-displayWorks(createWorksElements(await getWorks()));
+displayWorks(createWorksElements(await fetchGetWorks()));
 
 
 // -------- FILTER BUTTONS --------
-// Calls displayWorks(createWorksElements()) with
-//   Filtered list of works that have an id = id of clicked button 
-//                   Or
-//   All works if button has no numeral id
-export async function filterWorks(){
-    const getCategories = await fetch("http://localhost:5678/api/categories");
-    const categories = await getCategories.json();
-    const works = await getWorks();
-    // Create one button to show all works
-    createTOUSBtn();
-    // Create category buttons
-    categories.forEach(category => createFilterBtn(category.name, category.id));
-    // Filter works by category when button is clicked
-    [...document.querySelectorAll(".filter-btn")].forEach(button => {
-        button.addEventListener("click", function (){
-            const activeBtnId = Number(button.id);
-            if (activeBtnId){
-                displayWorks(createWorksElements(works.filter((work) => {
-                    return work.categoryId === activeBtnId;
-                })));
-            }
-            else
-                displayWorks(createWorksElements(works));
-        });
-    });
+async function fetchGetCategories() {
+    const getCategories = await fetch("http://localhost:5678/api/categories")
+    .catch(() => {console.error("Could not fetch resource (GET /categories).");});
+    return getCategories.json();
+};
+function createTOUSBtn(){
+    const showAllLabel = document.createElement("label");
+    showAllLabel.htmlFor = "tous";
+    showAllLabel.innerText = "Tous";
+    const showAllInput = document.createElement("input");
+    showAllInput.className = "filter-btn";
+    showAllInput.type = "button";
+    showAllInput.id = "tous";
+    showAllInput.name = "tous";
+    showAllInput.value = "Tous";
+    filtersForm.appendChild(showAllLabel);
+    filtersForm.appendChild(showAllInput);
 };
 function createFilterBtn(categoryName, categoryId){
     const label = document.createElement("label");
@@ -89,17 +84,30 @@ function createFilterBtn(categoryName, categoryId){
     filtersForm.appendChild(label);
     filtersForm.appendChild(input);
 };
-function createTOUSBtn(){
-    const showAllLabel = document.createElement("label");
-    showAllLabel.htmlFor = "tous";
-    showAllLabel.innerText = "Tous";
-    const showAllInput = document.createElement("input");
-    showAllInput.className = "filter-btn";
-    showAllInput.type = "button";
-    showAllInput.id = "tous";
-    showAllInput.name = "tous";
-    showAllInput.value = "Tous";
-    filtersForm.appendChild(showAllLabel);
-    filtersForm.appendChild(showAllInput);
-}
+// Calls displayWorks(createWorksElements()) with
+//   Filtered list of works that have an id = id of clicked button 
+//                   Or
+//   All works if button has no numeral id
+export async function filterWorks(){
+    const categories = await fetchGetCategories();
+    const works = await fetchGetWorks();
+    if (categories && works) {
+        // Create one button to show all works
+        createTOUSBtn();
+        // Create other buttons
+        categories.forEach(category => createFilterBtn(category.name, category.id));
+        // Filter works by category when button is clicked
+        [...document.querySelectorAll(".filter-btn")].forEach(button => {
+            button.addEventListener("click", function (){
+                const activeBtnId = Number(button.id);
+                if (activeBtnId) {
+                    displayWorks(createWorksElements(works.filter((work) => {
+                        return work.categoryId === activeBtnId;
+                    })));
+                } else
+                return displayWorks(createWorksElements(works));
+            });
+        });
+    };
+};
 
