@@ -53,7 +53,7 @@ displayWorks(createWorksElements(await fetchGetWorks()));
 
 
 // -------- FILTER BUTTONS --------
-async function fetchGetCategories() {
+export async function fetchGetCategories() {
     const getCategories = await fetch("http://localhost:5678/api/categories")
     .catch(() => {console.error("Could not fetch resource (GET /categories).");});
     return getCategories.json();

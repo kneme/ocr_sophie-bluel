@@ -1,4 +1,4 @@
-import { fetchGetWorks, createWorksElements, displayWorks } from "./works.js";
+import { fetchGetWorks, createWorksElements, displayWorks, fetchGetCategories} from "./works.js";
 
 // Show modal & arial-modal = true
 // Hide modal & arial-modal = false
@@ -126,13 +126,6 @@ async function generateGalleryModal(){
 
 
 // -------- SECOND VIEW OF (SAME) MODAL: Add work to gallery --------
-// List categories from the API in add picture form
-async function listCategories() {
-    const getCategories = await fetch("http://localhost:5678/api/categories")
-    .catch(() => {console.error("Could not fetch resource (GET /categories).");});
-    const categories = await getCategories.json();
-    categories.forEach(category => createOption(category.name, category.id));
-};
 // Create DOM ready 'option' element
 function createOption(name, id) {
     const optionList = document.createElement("option");
@@ -160,7 +153,7 @@ async function fetchPostWorks(bearer, formData) {
     return generateGalleryModal();
 };
 // Using the previous modal, replacing some elements with new ones
-function generateAddPicsModal() {
+async function generateAddPicsModal() {
     const parent = document.querySelector(".modalContent");
     parent.innerHTML = `
     <div class="modalHeader">
@@ -191,7 +184,8 @@ function generateAddPicsModal() {
     </div>
     `;
     // Categories to be selected in input
-    listCategories();
+    const categories = await fetchGetCategories();
+    categories.forEach(category => createOption(category.name, category.id));
     // Display image preview
     const imgInput = document.getElementById("addWork");         
     imgInput.onchange = function (){
