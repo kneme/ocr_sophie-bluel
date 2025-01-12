@@ -15,7 +15,7 @@ const alternateTexts = {
 
 // Return list of works from API
 export async function fetchGetWorks() {
-  const getWorks = await fetch("http://localhost:5678/api/works").catch(() => {
+  const getWorks = await fetch("https://sophie-bluel-back.onrender.com/api/works").catch(() => {
     console.error("Could not fetch resource (GET /works).");
   });
   const works = await getWorks.json();
@@ -59,7 +59,7 @@ displayWorks(createWorksElements(await fetchGetWorks()));
 // -------- FILTER BUTTONS --------
 export async function fetchGetCategories() {
   const getCategories = await fetch(
-    "http://localhost:5678/api/categories"
+    "https://sophie-bluel-back.onrender.com/api/categories"
   ).catch(() => {
     console.error("Could not fetch resource (GET /categories).");
   });

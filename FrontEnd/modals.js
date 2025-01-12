@@ -88,7 +88,7 @@ function deleteImg(listOfFigures) {
 }
 
 async function fetchDeleteWorks(bearer, id) {
-  await fetch(`http://localhost:5678/api/works/${id}`, {
+  await fetch(`https://sophie-bluel-back.onrender.com/api/works/${id}`, {
     method: "DELETE",
     headers: { Authorization: bearer },
   }).catch(() => {
@@ -139,7 +139,7 @@ function imageError(msg) {
 }
 
 async function fetchPostWorks(bearer, formData) {
-  await fetch("http://localhost:5678/api/works", {
+  await fetch("https://sophie-bluel-back.onrender.com/api/works", {
     method: "POST",
     headers: { Authorization: bearer },
     body: formData,
